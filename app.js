@@ -3,11 +3,18 @@
 var express = require('express');
 var AV = require('leanengine');
 
+const DisableCloudFunction = (req, res, next) => {
+  if (req.path === "/1.1/functions/_ops/metadatas") {
+    res.status(404).end()
+  } else {
+    next()
+  }
+}
+
 var app = express();
 
-
-
 app.enable('trust proxy');
+app.use(DisableCloudFunction);
 // 需要重定向到 HTTPS 可去除下一行的注释。
 app.use(AV.Cloud.HttpsRedirect());
 
